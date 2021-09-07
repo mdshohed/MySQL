@@ -1,0 +1,3 @@
+update address set depertment='EEE';
+
+update address set depertment='EEE' where name = 4;
