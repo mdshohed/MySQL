@@ -1,0 +1,230 @@
+To start mini server for mysql or Maria DB:
+-------------------------------------------  
+User: mysql –u root –p
+password: root
+
+--------
+SQL CODE:
+---------
+#Worksheet 1: 
+------------------------------
+show databases;
+create dtabase labclass; 
+use labclass; 
+drop database labclass; 		#delete databse 
+
+create table Student(			
+	id int, 
+	name varchar(50), 
+	cgpa decimal(3,2), 
+	grad_date date
+); 
+
+show tables; 					#mysql all tables show
+describe Student;				#create table describe
+insert into Student(id,name,cgpa,grad_date) values(123, 'mdshohed', 3.5, '2021-11-10');			#single row insert
+insert into Student(id,name,cgpa,grad_date) 
+values(123, 'mdshohed', 3.5, '2021-11-10'),(3, 'joy', 3.5, '2021-11-10'),(12, 'tusar', 3.5, '2021-11-10'),(124, 'kamal', 3.5, '2021-11-10');	#multiple row insert
+	
+select * from Student;  		#table data show 
+delete from Student where id=123; 
+update Student SET name="mdshohed" WHERE id=3;
+drop table Student; 			#delete full table 
+
+-------------------------------------------------------
+create table student(
+	STD_NO char(7),
+	NAME varchar(30),
+	DEPT char(3),
+	CGPA decimal(3,2),
+	GRAD_DATE date
+); 
+show tables;
+describe student;
+insert into student(STD_NO,NAME,DEPT,CGPA,GRAD_DATE)
+values(0711001,'Mashrafi', 'CSE', 3.91, '2003-11-15'), 
+(0711002, 'Sakib', 'CSE', 3.52, '2008-08-01'),
+(0711003, 'Razzak', 'EEE', 3.56, '2006-01-23'),
+(0711004, 'Ashraful', 'EEE', 3.84, '2008-02-13'),
+(0711005, 'Rafique', 'MEC', 3.88, '2000-12-20'),
+(0711006, 'Shafiul', 'EEE', 3.57, '2007-03-25'),
+(0711007, 'Kapali', 'CHE', 3.87, '2003-11-15'),
+(0711008, 'Aftab', 'MEC', 3.25, '2006-01-23'),
+(0711009, 'Nafees', 'CSE', 3.95, '2006-01-23'),
+(0711010, 'Tamim', 'CSE', 3.81, '2007-03-23'),
+(0711011, 'Rajeen', 'CHE', 3.21, '2007-03-01');  
+
+#3 
+update student set DEPT='CSE' WHERE NAME='Kapali';
+update student set CGPA=3.71, GRAD_DATE='2006-01-23' where name='Tamim';
+ 
+#4
+delete from student where STD_NO=0711011;
+delete from student where CGPA<3.75; 
+
+alter table student drop column dept; 
+alter table student add dept varchar(10); 
+alter table student modify dept varchar(3); 
+alter table student add id int; 
+---------------------------------------------------------
+#6
+select * from student; 
+select std_no,name from student;
+
+select name, cgpa*200+200 from student; 
+select name, cgpa*200+200 as marks from student; 
+select std_no, name, upper(dept) from student; 
+
+#USE ORDER BY:
+select distinct dept from student;
+select name from student order by name; 
+select name from student order by name asc;
+select name from student order by name desc; 
+select * from student order by name asc, cgpa desc; 
+
+select name from student where dept='CSE';
+select name, dept, cgpa from student where cgpa>3.9; 
+select name, dept, cgpa from student where cgpa>=3.5 and cgpa<=3.9;
+select name, dept, cgpa from student where cgpa between 3.5 and 3.9;
+select name, dept, cgpa from student where dept="cse" or dept="eee"; 
+select name, dept from student where GRAD_DATE>='2007-0-0' and GRAD_DATE<= '2008-0-0';
+select name, dept from student where year(GRAD_DATE)="2008"; 
+select name, dept from student where name LIKE 's%';
+select name, dept from student where name LIKE '%s';
+select name, dept from student where name LIKE '%a%a%';
+select name, dept from student where name like '_a%'; 
+
+------------------------------------------------------------------
+#Worksheet 2: 
+__________________________________________________________________
+
+#1 Aggregation: 
+select min(cgpa) from student; 
+select max(cgpa) from student;
+select sum(cgpa) from student;
+select count(cgpa) from student;
+select max(cgpa), min(cgpa) from student;
+select min(cgpa) as min_cgpa, max(cgpa) as max_cgpa from student group by dept; 
+select dept, min(cgpa) as min_cgpa, max(cgpa) as max_cgpa from student group by dept; 
+select count(dept), dept from student group by dept; 
+select min(cgpa), max(cgpa) from student group by dept having count(*)>=3; 
+
+
+#2 SubQueries:
+select name, cgpa from student where cgpa = (
+	select max(cgpa) from student 
+);
+select name,cgpa from student where cgpa IN (
+	select max(cgpa),min(cgpa) from student group by dept
+);
+select name from student where (dept,cgpa) IN (
+	select dept, max(cgpa) from student group by dept
+);
+select name from student where dept = "cse" and cgpa>any ( 
+	select cgpa from student where dept = "eee"
+);
+select name from student where dept = "cse" and cgpa> ( 
+	select min(cgpa) from student where dept = "eee"
+);
+select name from student where dept = "cse" and cgpa>all ( 
+	select cgpa from student where dept = "eee"
+);
+
+----------------------------------------------------
+#Worksheet 4: 
+____________________________________________________
+
+#Inner Join: return only select records that have matching values
+------------
+select * from customer inner join order on customer.c_id, = order. c_id 
+
+#Left Join: return all record from left table and right table only match value, the result is NULL from the right side, if there is no match. 
+--------------------
+select * from custoer left join order on custoter.c_id = order.c_id
+
+#Right Join: return all record from Right table and right table only match value, the result is NULL from the left side, if there is no match.
+-------------
+select * from customer right jon order on customer.c_id = order.c_id 
+
+#Full outer Join: return all match or not match value
+-----------------------------------------------------
+select * from customer full outer join order on customer.c_id = order.c_id
+
+#1: 
+----
+create table customer(
+	customer_id varchar(50),
+	customer_name varchar(50),
+	customer_street varchar(50),
+	customer_city varchar(50) 
+); 
+describe customer; 
+insert into customer(customer_id,customer_name,customer_street,customer_city)  
+values('C-101','Jones','Main','Harrison'),
+('C-201','Smith','North','Rye'),   
+('C-211','Hayes','Main','Harrison'),
+('C-212','Curry','North','Rye'),
+('C-215','Lindsay','Park','Pittsfield'),
+('C-220','Turner','Putnam','Stamford'),
+('C-222','Williams','Nassau','Princeton'),
+('C-225','Adams','Spring','Pittsfield'),
+('C-226','Johnson','Alma','Palo Alto');  
+
+create table borrower(
+	customer_id varchar(50), 
+	loan_number varchar(50) 
+);
+insert into borrower(customer_id,loan_number)
+values('C-101', 'L-17'), 
+('C-101','L-17'),
+('C-201','L-11'),
+('C-201','L-23'),
+('C-211','L-15 '),
+('C-212','L-93'),
+('C-222','L-17'),
+('C-225','L-16'),
+('C-226','L-14'); 
+create table loan(
+	loan_number varchar(50), 
+	branch_name varchar(50),
+	amount varchar(50) 
+); 
+insert into loan(loan_number,branch_name,amount)
+values('L-11','Round Hill ','900'),
+('L-14','Downtown','1500'),
+('L-15','Perryridge','1500'),
+('L-16','Perryridge','1300'),
+('L-17','Downtown','1000'),
+('L-23','Redwood','2000'),
+('L-93','Mianus','500'); 
+
+select * from customer inner join borrower on customer.customer_id = borrower.customer_id; 
+
+
+select * from customer left join borrower on customer.customer_id = borrower.customer_id; 
+
+
+select * from customer inner join borrower on customer.customer_id = borrower.customer_id
+inner join loan on loan.loan_number = borrower.loan_number;
+
+select customer_name,customer_city from customer inner join borrower on customer.customer_id = borrower.customer_id
+inner join loan on loan.loan_number = borrower.loan_number;
+
+select customer_name,customer_city from customer inner join borrower on customer.customer_id = borrower.customer_id
+inner join loan on loan.loan_number = borrower.loan_number
+where branch_name  = "perryridge"; 
+
+select * 
+from customer, borrower
+where customer.customer_id = borrower.customer_id; 
+
+select * 
+from customer C, borrower B, loan L
+where C.customer_id = B.customer_id
+and B.loan_number = L.loan_number; 
+
+select * 
+from customer C, borrower B, loan L
+where C.customer_id = B.customer_id
+and B.loan_number = L.loan_number
+and branch_name = "Perryridge"; 

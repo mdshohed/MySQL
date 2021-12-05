@@ -1,0 +1,25 @@
+select * from student; 
+select std_no,name from student;
+
+select name, cgpa*200+200 from student; 
+select name, cgpa*200+200 as marks from student; 
+select std_no, name, upper(dept) from student; 
+
+#USE ORDER BY:
+select distinct dept from student;
+select name from student order by name; 
+select name from student order by name asc;
+select name from student order by name desc; 
+select * from student order by name asc, cgpa desc; 
+
+select name from student where dept='CSE';
+select name, dept, cgpa from student where cgpa>3.9; 
+select name, dept, cgpa from student where cgpa>=3.5 and cgpa<=3.9;
+select name, dept, cgpa from student where cgpa between 3.5 and 3.9;
+select name, dept, cgpa from student where dept="cse" or dept="eee"; 
+select name, dept from student where GRAD_DATE>='2007-0-0' and GRAD_DATE<= '2008-0-0';
+select name, dept from student where year(GRAD_DATE)="2008"; 
+select name, dept from student where name LIKE 's%';
+select name, dept from student where name LIKE '%s';
+select name, dept from student where name LIKE '%a%a%';
+select name, dept from student where name like '_a%'; 
